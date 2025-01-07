@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Authentication</title>
+<link rel="stylesheet" th:href="@{/css/style.css}">
+<style>
+/* General Reset */
+body {
+	margin: 0;
+	font-family: 'Roboto', sans-serif;
+	background: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+	height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+/* Container for both forms */
+.container {
+	display: flex;
+	width: 900px;
+	height: 500px;
+	border-radius: 10px;
+	overflow: hidden;
+	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Form styling */
+.form-container {
+	flex: 1;
+	padding: 40px;
+	background: #fff;
+	border-radius: 8px;
+	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+	position: absolute;
+	transition: transform 0.6s ease;
+}
+
+/* Animations for sliding the forms */
+.form-container.hiding {
+	transform: translateX(100%);
+}
+
+.form-container.showing {
+	transform: translateX(0);
+}
+
+/* Heading style */
+h1 {
+	font-size: 24px;
+	text-align: center;
+	color: #333;
+}
+
+/* Label styling */
+label {
+	font-weight: bold;
+	font-size: 14px;
+	color: #555;
+	display: block;
+	margin-bottom: 8px;
+}
+
+/* Input styling */
+input, select, button {
+	width: 100%;
+	padding: 10px 15px;
+	margin-bottom: 20px;
+	border-radius: 4px;
+	border: 1px solid #ccc;
+	font-size: 14px;
+}
+
+input:focus, select:focus {
+	border-color: #fda085;
+	outline: none;
+}
+
+/* Button styling */
+button {
+	background: #fda085;
+	border: none;
+	color: #fff;
+	font-weight: bold;
+	cursor: pointer;
+	transition: background-color 0.3s ease-in-out;
+}
+
+button:hover {
+	background: #f6d365;
+}
+
+/* The animated label style */
+.animated-label {
+	position: relative;
+}
+
+.animated-label input, .animated-label select {
+	background: transparent;
+	border: none;
+	border-bottom: 2px solid #ccc;
+	padding: 8px 5px;
+	width: 100%;
+}
+
+.animated-label label {
+	position: absolute;
+	top: 10px;
+	left: 5px;
+	font-size: 12px;
+	color: #999;
+	pointer-events: none;
+	transition: all 0.2s ease-in-out;
+}
+
+.animated-label input:focus ~ label, .animated-label input:not(:placeholder-shown) 
+    ~ label, .animated-label select:focus ~ label, .animated-label select:not([value=""]) 
+    ~ label {
+	top: -12px;
+	font-size: 10px;
+	color: #fda085;
+}
+
+.button-container {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 20px;
+}
+
+.switch-btn {
+	background: transparent;
+	border: none;
+	font-size: 14px;
+	color: #fda085;
+	cursor: pointer;
+}
+</style>
+</head>
+<body>
+
+	<div class="container">
+		<!-- Registration Form -->
+
+		<div class="form-container showing" id="registerForm">
+
+			<div th:if="${registerMsg}" class="alert alert-success"
+				th:text="${registerMsg}"></div>
+
+			
+			<h1>User Registration</h1>
+			<form th:action="@{/saveUser}" th:object="${user}" method="post">
+				<div class="animated-label">
+					<input type="text" id="userName" th:field="*{userName}"
+						placeholder=" " required> <label for="userName">Full
+						Name</label>
+				</div>
+
+				<div class="animated-label">
+					<input type="email" id="userEmail" th:field="*{userEmail}"
+						placeholder=" " required> <label for="userEmail">Email
+						Address</label>
+				</div>
+
+				<div class="animated-label">
+					<input type="text" id="userPhno" th:field="*{userPhno}"
+						placeholder=" " required> <label for="userPhno">Phone
+						Number</label>
+				</div>
+
+				<div class="animated-label">
+					<select id="country" name="country" th:field="*{country}" required>
+						<option value="-1">Select a Country</option>
+
+						<option th:each="country : ${countries}"
+							th:value="${country.countryId}" th:text="${country.countryName}"></option>
+					</select> <label for="country">Country</label>
+				</div>
+
+				<div class="animated-label">
+					<select id="state" name="state" th:field="*{state}" required>
+						<option value="" disabled selected>Select a State</option>
+						<option th:each="state : ${states}" th:value="${state.stateId}"
+							th:text="${state.stateName}"></option>
+					</select> <label for="state">State</label>
+				</div>
+
+				<div class="animated-label">
+					<select id="city" name="city" th:field="*{city}" required>
+						<option value="" disabled selected>Select a City</option>
+						<option th:each="city : ${cities}" th:value="${city.cityId}"
+							th:text="${city.cityName}"></option>
+					</select> <label for="city">City</label>
+				</div>
+
+				<button type="submit">Register</button>
+			</form>
+			<div class="button-container">
+				<button class="switch-btn" onclick="toggleForms()">Already
+					have an account? Login</button>
+			</div>
+		</div>
+
+		<!-- Login Form -->
+
+
+		<div class="form-container hiding" id="loginForm">
+			<h1>User Login</h1>
+			<div th:if="${loginMsg}"  class="alert alert-success"
+				th:text="${loginMsg}"></div>
+			
+			<form th:action="@{/login}" th:object="${loginDto}" method="post">
+				<div class="animated-label">
+					<input type="email" id="loginEmail" th:field="*{userEmail}"
+						placeholder=" " required> <label for="loginEmail">Email
+						Address</label>
+				</div>
+
+				<div class="animated-label">
+					<input type="password" id="loginPassword" th:field="*{userPwd}"
+						placeholder=" " required> <label for="loginPassword">Password</label>
+				</div>
+
+				<button type="submit">Login</button>
+			</form>
+			<div class="button-container">
+				<button class="switch-btn" onclick="toggleForms()">Don't
+					have an account? Register</button>
+			</div>
+		</div>
+	</div>
+
+	<script>
+// Function to toggle between Login and Registration forms
+function toggleForms() {
+    const registerForm = document.getElementById('registerForm');
+    const loginForm = document.getElementById('loginForm');
+
+    registerForm.classList.toggle('hiding');
+    loginForm.classList.toggle('hiding');
+
+    registerForm.classList.toggle('showing');
+    loginForm.classList.toggle('showing');
+}
+
+
+
+</script>
+
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script>
+    // Load states when a country is selected
+    $(document).ready(function () {
+        $('#country').change(function () {
+            const countryId = $(this).val();
+            if (countryId) {
+		
+                $.ajax({
+                    url: '/states', // Adjust endpoint to your backend route
+                    type: 'GET',
+                    data: { countryId: countryId },
+                    success: function (states) {
+                        $('#state').html('<option value="" disabled selected>Select a State</option>');
+                        $('#city').html('<option value="" disabled selected>Select a City</option>');
+                        states.forEach(state => {
+                            $('#state').append(`<option value="${state.stateId}">${state.stateName}</option>`);
+                        });
+                    },
+                    error: function () {
+                        alert('Error loading states. Please try again.');
+                    }
+                });
+            }
+        });
+
+        // Load cities when a state is selected
+        $('#state').change(function () {
+            const stateId   = $(this).val();
+            const countryId = $("#country").val();
+            if (stateId) {
+                $.ajax({
+                    url: '/cities', // Adjust endpoint to your backend route
+                    type: 'GET',
+                    data: { stateId: stateId,countryId: countryId},
+                    success: function (cities) {
+                        $('#city').html('<option value="" disabled selected>Select a City</option>');
+                        cities.forEach(city => {
+                            $('#city').append(`<option value="${city.cityId}">${city.cityName}</option>`);
+                        });
+                    },
+                    error: function () {
+                        alert('Error loading cities. Please try again.');
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+
+
+
+
+</body>
+</html>

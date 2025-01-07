@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landing Page</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        /* Add this if you want basic CSS inline, but ideally, use a CSS file */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f7fd;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        header .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        header nav a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: #333;
+        }
+
+        header .actions button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .login {
+            background-color: transparent;
+            border: 1px solid #007bff;
+            color: #007bff;
+        }
+
+        .signup {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 100px 20px;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            color: #333;
+        }
+
+        .hero p {
+            color: #555;
+            font-size: 18px;
+            margin-top: 10px;
+        }
+
+        .hero .buttons {
+            margin-top: 20px;
+        }
+
+        .hero .buttons button {
+            margin: 10px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .try {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .works {
+            border: 1px solid #007bff;
+            color: #007bff;
+        }
+
+        .footer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .footer .logos img {
+            margin: 0 15px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">Ashok IT</div>
+        <nav>
+            <a href="#home">Home</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#about">About us</a>
+            <a href="#contact">Contact</a>
+        </nav>
+        <div class="actions">
+            <button class="login">Log in</button>
+            <button class="signup">Sign up</button>
+        </div>
+    </header>
+
+    <div class="hero">
+        <h1>The best way to showcase your project.</h1>
+        <p>Here you can put a short description about your project.</p>
+        <div class="buttons">
+            <button class="try">Try for free</button>
+            <button class="works">See how it works</button>
+        </div>
+        <div>
+            <!-- Replace this with your image dynamically if needed -->
+            <img src="https://source.unsplash.com/random/300x300/?technology,project" alt="Showcase" style="margin-top: 50px; width: 300px;">
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="logos">
+           
+            <!-- Add more logos as needed -->
+        </div>
+    </footer>
+</body>
+</html>

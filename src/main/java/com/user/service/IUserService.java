@@ -1,6 +1,7 @@
 package com.user.service;
 
 import com.user.dto.LoginDTO;
+import com.user.dto.ResetDTO;
 import com.user.dto.UserDTO;
 
 public interface IUserService {
@@ -18,10 +19,10 @@ public interface IUserService {
 	 * 2. THIS IS METHOD IS USED verify credential 
 	 * @param email
 	 * @param pwd
-	 * @return boolean
+	 * @return Integer
 	 */
 		
-		boolean verfyUser(LoginDTO login);
+		Integer verifyUser(LoginDTO login);
 		
 		
 	/**
@@ -31,7 +32,7 @@ public interface IUserService {
 	 *  @param newPwd
 	 *  @return boolean
 	 */
-		boolean resetPwd(Integer userId,String oldPwd,String newPwd);
+		boolean resetPwd(Integer userId,ResetDTO resetDTO);
 		
 		
 		/**
@@ -40,6 +41,8 @@ public interface IUserService {
 		 * @return boolean
 		 */
 		boolean isPwdActive(Integer userId);
+
+
 		
 
 }
