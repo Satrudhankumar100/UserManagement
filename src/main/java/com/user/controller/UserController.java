@@ -11,10 +11,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.user.dto.LoginDTO;
+import com.user.dto.QuotesDTO;
 import com.user.dto.ResetDTO;
 import com.user.dto.UserDTO;
 import com.user.entity.CountryEntity;
 import com.user.service.IAddressService;
+import com.user.service.IQuotesService;
 import com.user.service.IUserService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,16 +30,20 @@ public class UserController {
 
 	@Autowired
 	private IAddressService addressService;
+	
+	@Autowired
+	private IQuotesService quotesService;
 
 	@GetMapping("/user-form")
-	public String showUserForm(@RequestParam(required=false) String type,  @RequestParam(value = "msg", required = false) String msg, Model model) {
+	public String showUserForm(@RequestParam(required = false) String type,
+			@RequestParam(value = "msg", required = false) String msg, Model model) {
 		model.addAttribute("user", new UserDTO());
 		model.addAttribute("loginDto", new LoginDTO());
 
-		if (msg != null && type!=null) {
+		if (msg != null && type != null) {
 			if (type.equals("0")) {
 				model.addAttribute("registerMsg", msg);
-				
+
 			} else {
 				model.addAttribute("loginMsg", msg);
 			}
@@ -50,7 +56,7 @@ public class UserController {
 	}
 
 	@PostMapping("/saveUser")
-	public String saveUser(   @ModelAttribute("user") UserDTO userDTO, Model model) {
+	public String saveUser(@ModelAttribute("user") UserDTO userDTO, Model model) {
 		boolean isSaved = userService.saveUser(userDTO);
 		model.addAttribute("loginDto", new LoginDTO());
 		if (isSaved) {
@@ -100,12 +106,20 @@ public class UserController {
 	}
 
 	@GetMapping("/dashboard")
-	public String showDashboard(HttpServletRequest req) {
+	public String showDashboard(HttpServletRequest req,Model model) {
 		HttpSession session = req.getSession(false);
 		if (session == null) {
 			return "redirect:/user-form";
 		}
+		QuotesDTO randomQuotes = quotesService.getRandomQuotes();
+		model.addAttribute("quotes",randomQuotes);
+		
 		return "dashboard";
+	}
+	
+	@PostMapping("/dashboard")
+	public String refreshDashboard() {
+		return "redirect:/dashboard";
 	}
 
 	@PostMapping("/logout")
